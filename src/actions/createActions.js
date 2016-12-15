@@ -3,7 +3,7 @@ import makeActionCreator from './makeActionCreator';
 
 /**
  * Create Redux actions from Class or object
- * @param {Class} Actions
+ * @param {Class|Object} Actions
  * @return {Object} Action creators
  */
 export default function createActions(Actions) {

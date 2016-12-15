@@ -12,7 +12,7 @@ export default function createInstance(Actions) {
      * @param {...string} actionNames
      */
     generate(...actionNames) {
-      actionNames.forEach(actionName => {
+      actionNames.forEach((actionName) => {
         actions[actionName] = identity;
       });
     }
