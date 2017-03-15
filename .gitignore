@@ -3,6 +3,8 @@ node_modules
 
 # production
 dist
+lib
+es
 
 # misc
 .DS_Store

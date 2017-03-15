@@ -1,22 +1,23 @@
-import identity from 'lodash/identity';
-import isFunction from 'lodash/isFunction';
-import getInternalMethods from '../utils/getInternalMethods';
+import { isFunction, generateAction, getInternalMethods } from '../utils';
 
 export default function createInstance(Actions) {
   if (!isFunction(Actions)) return Actions;
 
   const actions = getInternalMethods(Actions);
-  class ActionsGenerator extends Actions {
-    /**
-     * Creates actions by their names
-     * @param {...string} actionNames
-     */
-    generate(...actionNames) {
-      actionNames.forEach((actionName) => {
-        actions[actionName] = identity;
-      });
-    }
-  }
 
-  return { ...actions, ...new ActionsGenerator() };
+  /* eslint-disable no-param-reassign */
+
+  /**
+   * Creates actions by their names
+   * @param {...string} actionNames
+   */
+  Actions.prototype.generate = function generate(...actionNames) {
+    actionNames.forEach((actionName) => {
+      actions[actionName] = generateAction;
+    });
+  };
+
+  /* eslint-enable no-param-reassign */
+
+  return { ...actions, ...new Actions() };
 }

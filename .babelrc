@@ -1,0 +1,27 @@
+{
+  "presets": [
+    [
+      "es2015", { "modules": false, "loose": true }
+    ]
+  ],
+  "plugins": [
+    "transform-runtime",
+    "transform-object-rest-spread"
+  ],
+  "env": {
+    "commonjs": {
+      "presets": [
+        [
+          "es2015", { "modules": "commonjs", "loose": true }
+        ]
+      ]
+    },
+    "es": {
+      "presets": [
+        [
+          "es2015", { "modules": false, "loose": true }
+        ]
+      ]
+    }
+  }
+}

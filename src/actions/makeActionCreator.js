@@ -1,10 +1,8 @@
-import identity from 'lodash/identity';
-import isFunction from 'lodash/isFunction';
-import toConstant from '../utils/toConstant';
+import { isFunction, generateAction, getTypePrefix, toConstant } from '../utils';
 
-export default function makeAction(name, payload) {
-  const type = toConstant(name);
-  const finalPayload = isFunction(payload) ? payload : identity;
+export default function makeAction(prefix, name, payload) {
+  const type = `${getTypePrefix(prefix)}${toConstant(name)}`;
+  const finalPayload = isFunction(payload) ? payload : generateAction;
 
   const action = (...args) => ({
     type, payload: finalPayload(...args)

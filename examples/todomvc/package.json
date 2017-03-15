@@ -5,15 +5,15 @@
   "devDependencies": {
     "enzyme": "^2.4.1",
     "react-addons-test-utils": "^15.3.0",
-    "react-scripts": "^0.4.0"
+    "react-scripts": "^0.9.5"
   },
   "dependencies": {
     "classnames": "^2.2.5",
     "react": "^15.3.0",
     "react-dom": "^15.3.0",
-    "react-redux": "^4.4.5",
+    "react-redux": "^5.0.3",
     "redux": "^3.5.2",
-    "realt": "^1.0.1",
+    "realt": "^1.0.2",
     "todomvc-app-css": "^2.0.6"
   },
   "scripts": {
@@ -23,6 +23,6 @@
     "test": "react-scripts test"
   },
   "eslintConfig": {
-    "extends": "./node_modules/react-scripts/config/eslint.js"
+    "extends": "./node_modules/react-scripts/eslintrc"
   }
 }

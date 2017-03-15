@@ -3,13 +3,14 @@ import makeActionCreator from './makeActionCreator';
 
 /**
  * Create Redux actions from Class or object
- * @param {Class|Object} Actions
+ * @param {Function|Object} Actions
+ * @param {String} [prefix]
  * @return {Object} Action creators
  */
-export default function createActions(Actions) {
+export default function createActions(Actions, prefix) {
   const actions = createInstance(Actions);
 
   return Object.keys(actions).reduce((result, name) => ({
-    ...result, [name]: makeActionCreator(name, actions[name])
+    ...result, [name]: makeActionCreator(prefix, name, actions[name])
   }), {});
 }

@@ -1,30 +1,43 @@
-import isFunction from 'lodash/isFunction';
-import toConstant from '../utils/toConstant';
+import { isFunction, toConstant } from '../utils';
 import makeActionHandler from './makeActionHandler';
 
 function createInstanceByClass(ReducerClass) {
   const reducers = [];
 
-  class ReducerGenerator extends ReducerClass {
-    /**
-     * Attaches reducer's handler function to specific action type
-     * @param {function} reducerHandler
-     * @param {object} actionCreator
-     */
-    bindHandler(reducerHandler, actionCreator) {
-      reducers.push(makeActionHandler(reducerHandler, actionCreator, this.defaultState));
-    }
-  }
+  /* eslint-disable no-param-reassign */
 
-  const reducer = new ReducerGenerator();
+  /**
+   * Attaches reducer's handler function to specific action type
+   * @param {Function} reducerHandler
+   * @param {Object} actionCreator
+   */
+  ReducerClass.prototype.bindHandler = function bindHandler(reducerHandler, actionCreator) {
+    reducers.push(
+      makeActionHandler(reducerHandler, null, actionCreator.toString(), this.initialState)
+    );
+  };
 
-  return { reducers, defaultState: reducer.initialState };
+  /**
+   * Binds actionCreator for specific reducer handler function
+   * @param {Object} actionCreator
+   * @param {Function} reducerHandler
+   */
+  ReducerClass.prototype.bindAction = function bindAction(actionCreator, reducerHandler) {
+    this.bindHandler(reducerHandler, actionCreator);
+  };
+
+  /* eslint-enable no-param-reassign */
+
+  const reducer = new ReducerClass();
+
+  return { reducers, initialState: reducer.initialState };
 }
 
-function createInstanceByObject(reducerObject) {
+function createInstanceByObject(reducerObject, typePrefix) {
   const reducers = [];
   const prefixes = ['handle', 'reducerFor'];
-  const defaultState = reducerObject.defaultState;
+  const initialState = reducerObject.initialState;
+
   let actionType = null;
   let reducerHandler = null;
 
@@ -37,14 +50,14 @@ function createInstanceByObject(reducerObject) {
     actionType = toConstant(actionType);
     reducerHandler = reducerObject[reducer];
 
-    reducers.push(makeActionHandler(reducerHandler, actionType, defaultState));
+    reducers.push(makeActionHandler(reducerHandler, typePrefix, actionType, initialState));
   });
 
-  return { reducers, defaultState: reducerObject.initialState };
+  return { reducers, initialState };
 }
 
-export default function createInstance(Reducer) {
+export default function createInstance(Reducer, typePrefix) {
   if (isFunction(Reducer)) return createInstanceByClass(Reducer);
 
-  return createInstanceByObject(Reducer);
-};
+  return createInstanceByObject(Reducer, typePrefix);
+}

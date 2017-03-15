@@ -1,15 +1,21 @@
 import reduceReducers from 'reduce-reducers';
+import { isString } from '../utils';
 import createInstance from './createInstance';
 
 /**
  * Create Redux reducer from Class
- * @param {Class|Object} Reducer
- * @param {Object} [initialState]
+ * @param {Function|Object} Reducer
+ * @param {Object|String} [initialStateOrPrefix]
+ * @param {String} [prefix]
  * @return {Function} Reducer
  */
-export default function createReducer(Reducer, initialState) {
-  const { reducers, defaultState } = createInstance(Reducer);
+export default function createReducer(Reducer, initialStateOrPrefix, prefix) {
+  const hasPrefix = isString(prefix);
+  const initialState = hasPrefix ? initialStateOrPrefix : {};
+  const typePrefix = !hasPrefix && isString(initialStateOrPrefix) ? initialStateOrPrefix : prefix;
+
+  const { reducers, initialState: reducerInitialState } = createInstance(Reducer, typePrefix);
   const reducer = reduceReducers(...reducers);
 
-  return (state = (defaultState || initialState), action) => reducer(state, action);
+  return (state = (reducerInitialState || initialState), action) => reducer(state, action);
 }

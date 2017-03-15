@@ -16,4 +16,4 @@ class TodoActions {
   }
 }
 
-export default createActions(TodoActions);
+export default createActions(TodoActions, 'TODO');
