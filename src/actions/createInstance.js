@@ -1,23 +1,39 @@
-import { isFunction, generateAction, getInternalMethods } from '../utils';
+import { isObject, isArray, isFunction, getClassMethods } from '../utils';
 
-export default function createInstance(Actions) {
-  if (!isFunction(Actions)) return Actions;
+import generateActions from './generateActions';
 
-  const actions = getInternalMethods(Actions);
+function createInstanceFromObject(actions) {
+  return actions;
+}
 
-  /* eslint-disable no-param-reassign */
+function createInstanceFromArray(actions) {
+  return generateActions(actions);
+}
+
+function createInstanceFromClass(ActionsClass) {
+  const actions = getClassMethods(ActionsClass);
 
   /**
    * Creates actions by their names
-   * @param {...string} actionNames
+   * @param {...string} actionsNames
    */
-  Actions.prototype.generate = function generate(...actionNames) {
-    actionNames.forEach((actionName) => {
-      actions[actionName] = generateAction;
-    });
+  ActionsClass.prototype.generate = function generate(...actionsNames) {
+    Object.assign(actions, generateActions(actionsNames));
   };
 
-  /* eslint-enable no-param-reassign */
+  return { ...actions, ...new ActionsClass() };
+}
 
-  return { ...actions, ...new Actions() };
+export default function createInstance(Actions) {
+  let actions = {};
+
+  if (isObject(Actions)) {
+    actions = createInstanceFromObject(Actions);
+  } else if (isArray(Actions)) {
+    actions = createInstanceFromArray(Actions);
+  } else if (isFunction(Actions)) {
+    actions = createInstanceFromClass(Actions);
+  }
+
+  return actions;
 }

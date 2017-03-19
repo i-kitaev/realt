@@ -1,20 +1,29 @@
 import reduceReducers from 'reduce-reducers';
-import { isString } from '../utils';
+import { isString, isFunction, isObject, isUndefined } from '../utils';
 import createInstance from './createInstance';
 
 /**
- * Create Redux reducer from Class
- * @param {Function|Object} Reducer
- * @param {Object|String} [initialStateOrPrefix]
- * @param {String} [prefix]
+ * Create Redux reducer from object or class
+ * @param {Object|Function} Reducer
+ * @param {*|String} [initialState]
+ * @param {String} [namespace]
  * @return {Function} Reducer
  */
-export default function createReducer(Reducer, initialStateOrPrefix, prefix) {
-  const hasPrefix = isString(prefix);
-  const initialState = hasPrefix ? initialStateOrPrefix : {};
-  const typePrefix = !hasPrefix && isString(initialStateOrPrefix) ? initialStateOrPrefix : prefix;
+export default function createReducer(Reducer, initialState, namespace) {
+  if (isString(initialState) && isUndefined(namespace)) {
+    namespace = initialState;
+    initialState = undefined;
+  }
 
-  const { reducers, initialState: reducerInitialState } = createInstance(Reducer, typePrefix);
+  if (!(isObject(Reducer) || isFunction(Reducer))) {
+    throw new Error('Expected the reducer to be object or class.');
+  }
+
+  if (!isUndefined(namespace) && !isString(namespace)) {
+    throw new Error('Expected the type namespace to be a string.');
+  }
+
+  const { reducers, initialState: reducerInitialState } = createInstance(Reducer, namespace);
   const reducer = reduceReducers(...reducers);
 
   return (state = (reducerInitialState || initialState), action) => reducer(state, action);

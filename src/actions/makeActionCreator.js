@@ -1,14 +1,20 @@
-import { isFunction, generateAction, getTypePrefix, toConstant } from '../utils';
+import { isFunction, isObject, identity, getActionType } from '../utils';
 
-export default function makeAction(prefix, name, payload) {
-  const type = `${getTypePrefix(prefix)}${toConstant(name)}`;
-  const finalPayload = isFunction(payload) ? payload : generateAction;
+export default function makeActionCreator(actionName, payload, namespace, context) {
+  const actionType = getActionType(actionName, namespace);
+  let payloadCreator = isFunction(payload) ? payload : identity;
 
-  const action = (...args) => ({
-    type, payload: finalPayload(...args)
-  });
+  if (isObject(context)) {
+    payloadCreator = payloadCreator.bind(context);
+  }
 
-  action.toString = () => type;
+  function actionCreator(...args) {
+    return {
+      type: actionType, payload: payloadCreator(...args)
+    };
+  }
 
-  return action;
+  actionCreator.toString = () => actionType;
+
+  return actionCreator;
 }

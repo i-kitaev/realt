@@ -1,1 +1,3 @@
-export default object => typeof object === 'string';
+export default function isString(object) {
+  return typeof object === 'string';
+}

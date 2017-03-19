@@ -1,10 +1,27 @@
-import { isFunction, toConstant } from '../utils';
+import { isObject, isFunction, getActionType } from '../utils';
 import makeActionHandler from './makeActionHandler';
 
-function createInstanceByClass(ReducerClass) {
+function createInstanceFromObject(reducer, namespace) {
   const reducers = [];
+  const initialState = reducer.initialState;
 
-  /* eslint-disable no-param-reassign */
+  let actionType = null;
+  let reducerHandler = null;
+
+  Object.keys(reducer).forEach((reducerName) => {
+    actionType = getActionType(reducerName, namespace);
+    reducerHandler = reducer[reducerName];
+
+    reducers.push(
+      makeActionHandler(actionType, reducerHandler, initialState)
+    );
+  });
+
+  return { reducers, initialState };
+}
+
+function createInstanceFromClass(ReducerClass) {
+  const reducers = [];
 
   /**
    * Attaches reducer's handler function to specific action type
@@ -13,12 +30,12 @@ function createInstanceByClass(ReducerClass) {
    */
   ReducerClass.prototype.bindHandler = function bindHandler(reducerHandler, actionCreator) {
     reducers.push(
-      makeActionHandler(reducerHandler, null, actionCreator.toString(), this.initialState)
+      makeActionHandler(actionCreator.toString(), reducerHandler, this.initialState)
     );
   };
 
   /**
-   * Binds actionCreator for specific reducer handler function
+   * Binds actionCreator to specific reducer handler function
    * @param {Object} actionCreator
    * @param {Function} reducerHandler
    */
@@ -26,38 +43,19 @@ function createInstanceByClass(ReducerClass) {
     this.bindHandler(reducerHandler, actionCreator);
   };
 
-  /* eslint-enable no-param-reassign */
-
   const reducer = new ReducerClass();
 
   return { reducers, initialState: reducer.initialState };
 }
 
-function createInstanceByObject(reducerObject, typePrefix) {
-  const reducers = [];
-  const prefixes = ['handle', 'reducerFor'];
-  const initialState = reducerObject.initialState;
+export default function createInstance(Reducer, namespace) {
+  let reducer = { reducers: [] };
 
-  let actionType = null;
-  let reducerHandler = null;
+  if (isObject(Reducer)) {
+    reducer = createInstanceFromObject(Reducer, namespace);
+  } else if (isFunction(Reducer)) {
+    reducer = createInstanceFromClass(Reducer);
+  }
 
-  Object.keys(reducerObject).forEach((reducer) => {
-    actionType = reducer;
-    prefixes.forEach((prefix) => {
-      if (reducer.includes(prefix)) actionType = reducer.replace(prefix, '');
-    });
-
-    actionType = toConstant(actionType);
-    reducerHandler = reducerObject[reducer];
-
-    reducers.push(makeActionHandler(reducerHandler, typePrefix, actionType, initialState));
-  });
-
-  return { reducers, initialState };
-}
-
-export default function createInstance(Reducer, typePrefix) {
-  if (isFunction(Reducer)) return createInstanceByClass(Reducer);
-
-  return createInstanceByObject(Reducer, typePrefix);
+  return reducer;
 }

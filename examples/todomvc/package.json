@@ -13,7 +13,7 @@
     "react-dom": "^15.3.0",
     "react-redux": "^5.0.3",
     "redux": "^3.5.2",
-    "realt": "^1.0.3",
+    "realt": "^1.0.4",
     "todomvc-app-css": "^2.0.6"
   },
   "scripts": {

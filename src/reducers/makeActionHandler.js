@@ -1,9 +1,19 @@
-import { getTypePrefix } from '../utils';
+import { isFunction, isUndefined, warning } from '../utils';
 
-export default function makeActionHandler(reducerHandler, typePrefix, actionType, initialState) {
-  const actionCreatorType = `${getTypePrefix(typePrefix)}${actionType}`;
+export default function makeActionHandler(actionType, reducerHandler, initialState) {
+  const isValidReducerHandler = isFunction(reducerHandler);
+
+  if (isUndefined(actionType)) {
+    warning('Expected the action type to be a string.');
+  }
+
+  if (!isValidReducerHandler) {
+    warning(`Expected the reducer for action type: ${actionType} to be a function.`);
+  }
 
   return (state = initialState, action) => (
-    actionCreatorType === action.type ? reducerHandler(state, action.payload) : state
+    actionType === action.type && isValidReducerHandler ?
+      reducerHandler(state, action.payload) :
+      state
   );
 }

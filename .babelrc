@@ -1,12 +1,13 @@
 {
+  "presets": [
+    ["es2015", { "modules": false, "loose": true }]
+  ],
   "plugins": [
+    "transform-object-assign",
     "transform-object-rest-spread"
   ],
   "env": {
     "umd": {
-      "presets": [
-        ["es2015", { "modules": false, "loose": true }]
-      ],
       "plugins": [
         "transform-runtime"
       ]
@@ -17,9 +18,6 @@
       ]
     },
     "es": {
-      "presets": [
-        ["es2015", { "modules": false, "loose": true }]
-      ]
     }
   }
 }

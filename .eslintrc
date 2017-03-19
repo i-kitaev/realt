@@ -3,6 +3,7 @@
   "parser": "babel-eslint",
   "rules": {
     "comma-dangle": 0,
+    "no-param-reassign": 0,
     "class-methods-use-this": 0
   }
 }
