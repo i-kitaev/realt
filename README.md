@@ -1,4 +1,4 @@
-# Realt
+# <a href='http://realt.js.org'><img src='https://raw.githubusercontent.com/Vnkitaev/realt/master/logo/logo-dark.png' height='60'></a>
 [![npm version](https://badge.fury.io/js/realt.svg)](https://www.npmjs.com/package/realt)
 
 Realt is a new way to work with [Redux](https://github.com/reactjs/redux) inspired by [Alt](https://github.com/goatslacker/alt)
