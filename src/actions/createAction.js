@@ -15,7 +15,7 @@ export default function createAction(actionName, payloadCreator, namespace) {
   }
 
   if (!isString(actionName)) {
-    throw new Error('Expected the action name to be string.');
+    throw new Error('Expected the action name to be a string.');
   }
 
   if (!isUndefined(payloadCreator) && !isFunction(payloadCreator)) {

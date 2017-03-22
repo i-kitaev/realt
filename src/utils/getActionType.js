@@ -7,7 +7,7 @@ export default function getActionType(actionName, namespace) {
   let actionType = actionName;
 
   PREFIXES.forEach((prefix) => {
-    if (actionType.indexOf(prefix) !== -1) {
+    if (actionType.indexOf(prefix) === 0) {
       actionType = actionType.replace(prefix, '');
     }
   });

@@ -1,5 +1,4 @@
 # Realt
-
 [![npm version](https://badge.fury.io/js/realt.svg)](https://www.npmjs.com/package/realt)
 
 Realt is a new way to work with [Redux](https://github.com/reactjs/redux) inspired by [Alt](https://github.com/goatslacker/alt)
@@ -17,7 +16,6 @@ npm install --save realt
 ##### createAction(actionName: string, payloadCreator: function)
 ##### createAction(actionName: string, namespace: string)
 ##### createAction(actionName: string, payloadCreator: function, namespace: string)
-
 ##### createActions(Actions: object|array|function)
 ##### createActions(Actions: object|array|function, namespace: string)
 
@@ -71,7 +69,7 @@ const actions = createActions(Actions);
 ```
 ##### ActionsClass.generate(…actionNames: string)
 You can use this method in ActionsClass constructor, it'll setup actions which simply pass forward all incoming data
-###### Note: all of the generated actions will receive only 1 parameter, so your data should be wrapped in an object
+##### Note: all of the generated actions will receive only 1 parameter, so your data should be wrapped in an object
 
 ### Reducer
 ##### createReducer(Reducer: object|function)
