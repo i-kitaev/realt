@@ -24,14 +24,21 @@ npm install --save realt
 ```javascript
 import { createAction } from 'realt';
 
-const testAction = createAction('test')
+const addText = createAction('addText');
+
+expect(addText.toString()).toEqual('ADD_TEXT');
+
+expect(addText('Hello world')).toEqual({
+  type: 'ADD_TEXT',
+  payload: 'Hello world'
+});
 ```
 
 ##### Create from array
 ```javascript
 import { createActions } from 'realt';
 
-const actions = createActions(['create', 'delete'])
+const actions = createActions(['create', 'delete']);
 ```
 
 ##### Create from object
